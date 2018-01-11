@@ -1,17 +1,9 @@
 .main {
-  .content-wrapper {
-    text-align: center;
-    margin-top: 350px;
+  .center {
+    margin: 0 auto;
 
-    p {
-      font-family: $main-font;
-      font-weight: 200;
-      font-size: 1.6em;
-    }
-
-    i {
-      font-size: 65px;
-      color: $main-grey;
+    #ph_game, canvas {
+      margin: 0 auto;
     }
   }
 }

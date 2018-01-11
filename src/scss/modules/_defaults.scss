@@ -11,6 +11,8 @@ body {
   color: #444;
   transition: all .4s .3s ease-in;
   overflow: auto;
+  padding: 0;
+  margin: 0;
 }
 body,html{
   min-height: 100vh;

@@ -19,7 +19,9 @@ body {
   font: 300 13px/1.6 'Helvetica Neue', Helvetica, Arial;
   color: #444;
   transition: all .4s .3s ease-in;
-  overflow: auto; }
+  overflow: auto;
+  padding: 0;
+  margin: 0; }
 
 body, html {
   min-height: 100vh; }
@@ -409,16 +411,10 @@ textarea {
 .nav ul {
   list-style: none; }
 
-.main .content-wrapper {
-  text-align: center;
-  margin-top: 350px; }
-  .main .content-wrapper p {
-    font-family: "OpenSans", Arial, Helvetica, sans-serif;
-    font-weight: 200;
-    font-size: 1.6em; }
-  .main .content-wrapper i {
-    font-size: 65px;
-    color: #959B9D; }
+.main .center {
+  margin: 0 auto; }
+  .main .center #ph_game, .main .center canvas {
+    margin: 0 auto; }
 
 @font-face {
   font-family: 'OpenSans';
