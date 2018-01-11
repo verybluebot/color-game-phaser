@@ -1,0 +1,17 @@
+.main {
+  .content-wrapper {
+    text-align: center;
+    margin-top: 350px;
+
+    p {
+      font-family: $main-font;
+      font-weight: 200;
+      font-size: 1.6em;
+    }
+
+    i {
+      font-size: 65px;
+      color: $main-grey;
+    }
+  }
+}
