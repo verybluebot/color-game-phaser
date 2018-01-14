@@ -7,6 +7,10 @@ let StateMain = {
 
     game.load.spritesheet('rings', 'assets/img/rings.png', 60, 65, 5);
     game.load.spritesheet('balls', 'assets/img/balls.png', 35, 35, 5);
+    game.load.spritesheet('soundButtons', 'assets/img/soundButtons.png', 32, 32, 2);
+
+    game.load.audio('points', 'assets/sounds/points.mp3');
+    game.load.audio('gameOver', 'assets/sounds/gameOver.mp3');
   },
 
   create: function() {
@@ -16,7 +20,18 @@ let StateMain = {
     const red = game.add.image(0, 100, 'red');
     const yellow = game.add.image(100, 100, 'yellow');
 
-    this.ball = game.add.image(0,0, 'balls');
+    this.ball = game.add.sprite(0,0, 'balls');
+
+    // vars
+    this.ballSpeed = 200;
+    this.incBallSpeed = 10;
+    score = 0;
+
+    this.pointsSound = game.add.audio('points');
+    this.pointsSound.volume = 0.5;
+    this.gameOver = game.add.audio('gameOver');
+
+    game.physics.startSystem(Phaser.Physics.Arcade);
 
     green.inputEnabled = true;
     green.name = 'green';
@@ -48,6 +63,24 @@ let StateMain = {
     this.ring = game.add.image(game.world.centerX, this.colorsGroup.y - 100, 'rings');
     this.ring.anchor.set(0.5, 0.5);
 
+    game.physics.arcade.enable(this.ball);
+
+    // text
+    this.scoreText = game.add.text(this.world.centerX, 150, '0');
+    this.scoreText.fill = '#fff';
+    this.scoreText.fontSize = 64;
+    this.scoreText.anchor.set(0.5, 0.5);
+
+    this.scoreLabel = game.add.text(this.world.centerX, 100, 'Score');
+    this.scoreLabel.fill = '#fff';
+    this.scoreLabel.fontSize = 32;
+    this.scoreLabel.anchor.set(0.5, 0.5);
+
+    this.soundButton = game.add.image(12, 12, 'soundButtons');
+    this.soundButton.inputEnabled = true;
+    this.soundButton.frame = 1;
+    sound = false;
+
     // set up listeners
     this.setListeners();
 
@@ -57,14 +90,47 @@ let StateMain = {
 
   update: function() {
 
+    const diffX = Math.abs(this.ring.x - this.ball.x);
+    const diffY = Math.abs(this.ring.y - this.ball.y);
+
+    if (diffX < 10 && diffY < 10) {
+      this.ball.body.velocity.setTo(0, 0);
+
+      if (this.ball.frame === this.ring.frame) {
+        this.setRandomBall();
+        score++;
+        this.scoreText.text = score;
+
+        if (sound) {
+          this.pointsSound.play();
+        }
+
+      } else {
+        game.state.start('StatePlayOver');
+
+        if (sound) {
+          this.gameOver.play();
+        }
+      }
+    }
   },
 
   setListeners: function() {
     game.input.onUp.add(this.resetRing, this);
+    this.soundButton.events.onInputDown.add(this.soundToggle, this);
+  },
+
+  soundToggle: function() {
+    sound = !sound;
+    if (sound) {
+      this.soundButton.frame = 0;
+    } else {
+      this.soundButton.frame = 1;
+    }
   },
 
   setRandomBall: function() {
-    const ballColor = game.rnd.integerInRange(0, 5);
+    const ballColor = game.rnd.integerInRange(1, 4);
     const ballX = game.rnd.integerInRange(0, game.world.width);
     const ballY = game.rnd.integerInRange(0, 100);
 
@@ -72,12 +138,18 @@ let StateMain = {
     this.ball.x = ballX;
     this.ball.y = ballY;
 
-    console.log('this is ball', this.ball)
+    // this.ball.body.velocity.setTo(0, 100);
+
+    // increas ball speed
+    this.ballSpeed += this.incBallSpeed;
+    // returns rotation to the target
+    const rotation = game.physics.arcade.moveToXY(this.ball, this.ring.x, this.ring.y, this.ballSpeed);
+
+    this.ball.rotation = rotation;
   },
 
   changeColor: function(target) {
     if (!target.name) return;
-    console.log('this is the payload', target.name);
 
     switch (target.name) {
       case 'blue':

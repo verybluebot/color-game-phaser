@@ -1,4 +1,7 @@
 let game;
+let score;
+let sound;
+
 window.onload = () => {
   if (screen.width > 1000) {
     game = new Phaser.Game(480, 640, Phaser.AUTO, 'ph_game');
@@ -8,6 +11,7 @@ window.onload = () => {
 
   game.state.add('StateMain', StateMain);
   game.state.add('StateTitle', StateTitle);
+  game.state.add('StatePlayOver', StatePlayOver);
   game.state.start('StateTitle');
 };
 
